@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { register } from '../services/authService';
 import { useNavigate } from 'react-router-dom';
+import './Register.css';
 
 export default function Register() {
   const [username, setUsername] = useState('');
@@ -10,21 +11,47 @@ export default function Register() {
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    setError('');
+
     try {
       await register(username, password);
       navigate('/login');
     } catch (err) {
-      setError(err.message);
+      setError(err.message || 'Kayıt sırasında bir hata oluştu.');
     }
   };
 
   return (
-    <form onSubmit={handleRegister}>
-      <h2>Kayıt Ol</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Kullanıcı adı" required />
-      <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Şifre" required />
-      <button type="submit">Kayıt Ol</button>
-    </form>
+    <div className="register-container">
+      <form onSubmit={handleRegister} className="register-form">
+        <h2>Kayıt Ol</h2>
+
+        {error && <div className="error-box">{error}</div>}
+
+        <div className="form-group">
+          <label>Kullanıcı Adı</label>
+          <input
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="Kullanıcı adı"
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Şifre</label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Şifre"
+            required
+          />
+        </div>
+
+        <button type="submit">Kayıt Ol</button>
+      </form>
+    </div>
   );
 }
